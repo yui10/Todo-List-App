@@ -1,0 +1,77 @@
+version: '3'
+
+services:
+  frontend:
+    # React用のコンテナ
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: front
+    hostname: react-server
+    tty: true
+    volumes:
+      - ./frontend:/usr/src/app/frontend
+    # command: sh -c "cd frontend"
+    # command: sh -c "cd frontend && yarn start"
+    ports:
+      - 3000:3000
+    networks:
+      - backend
+    depends_on:
+      - backend
+
+  backend:
+    # Express用のコンテナ
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: back
+    hostname: api-server
+    tty: true
+    volumes:
+      - ./backend:/usr/src/app/backend
+    # command: sh -c "cd backend"
+    # command: sh -c "cd backend && npm run start:dev"
+    ports:
+      - 3001:3000
+    networks:
+      - backend
+    depends_on:
+      - db
+
+  db:
+    # MySQL用のコンテナ
+    build:
+      context: ./database/mysql
+      dockerfile: Dockerfile
+    container_name: db
+    hostname: mysql-server
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database/mysql/my.cnf:/etc/mysql/conf.d/my.cnf # cnfファイル
+    # environment:
+    #   - MYSQL_ROOT_PASSWORD = ${ROOT_PASSWORD}
+    #   - MYSQL_DATABASE = ${DB_NAME}
+    #   - MYSQL_USER = ${DB_USER}
+    #   - MYSQL_PASSWORD = ${DB_PASSWORD}
+    #   - TZ = ${TZ}
+    env_file:
+      - ./database/mysql/.env
+    ports:
+      - 3306:3306
+    restart: always
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+    name: backend-network
+
+volumes:
+  mysql-data:
+    name: db-data
+  # express-data:
+  #   name: express-data
+  # react-data:
+  #   name: react-data
