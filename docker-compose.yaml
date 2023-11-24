@@ -9,8 +9,10 @@ services:
     container_name: front
     hostname: react-server
     tty: true
+    stdin_open: true
     volumes:
       - ./frontend:/usr/src/app/frontend
+      - react-node_modules:/usr/src/app/frontend/node_modules
     # command: sh -c "cd frontend"
     # command: sh -c "cd frontend && yarn start"
     ports:
@@ -28,8 +30,10 @@ services:
     container_name: back
     hostname: api-server
     tty: true
+    stdin_open: true
     volumes:
       - ./backend:/usr/src/app/backend
+      - express-node_modules:/usr/src/app/backend/node_modules
     # command: sh -c "cd backend"
     # command: sh -c "cd backend && npm run start:dev"
     ports:
@@ -46,6 +50,8 @@ services:
       dockerfile: Dockerfile
     container_name: db
     hostname: mysql-server
+    tty: true
+    stdin_open: true
     volumes:
       - mysql-data:/var/lib/mysql
       - ./database/mysql/my.cnf:/etc/mysql/conf.d/my.cnf # cnfファイル
@@ -71,7 +77,7 @@ networks:
 volumes:
   mysql-data:
     name: db-data
-  # express-data:
-  #   name: express-data
-  # react-data:
-  #   name: react-data
+  react-node_modules:
+    name: react-node_modules
+  express-node_modules:
+    name: express-node_modules

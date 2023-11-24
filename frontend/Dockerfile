@@ -1,2 +1,6 @@
 FROM node:20-alpine3.18
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/frontend
+
+COPY ./package*.json ./
+
+CMD ash -c "npm install --no-audit && npm run start"
