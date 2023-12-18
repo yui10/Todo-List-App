@@ -10,6 +10,8 @@ services:
     hostname: react-server
     tty: true
     stdin_open: true
+    environment:
+      - WATCHPACK_POLLING=true
     volumes:
       - ./frontend:/usr/src/app/frontend
       - react-node_modules:/usr/src/app/frontend/node_modules
@@ -65,7 +67,6 @@ services:
       - ./database/mysql/.env
     ports:
       - 3306:3306
-    restart: always
     networks:
       - backend
 
