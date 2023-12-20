@@ -18,7 +18,7 @@ db.query(`CREATE TABLE IF NOT EXISTS task (
   id TEXT NOT NULL,
   content TEXT NOT NULL,
   due_date TEXT NOT NULL,
-  status TEXT NOT NULL CHECK(status = 'running' or status = 'completed'),
+  status BOOLEAN NOT NULL,
   PRIMARY KEY(id(32))
   )`);
 db.end();
