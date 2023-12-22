@@ -38,6 +38,8 @@ services:
       - express-node_modules:/usr/src/app/backend/node_modules
     # command: sh -c "cd backend"
     # command: sh -c "cd backend && npm run start:dev"
+    env_file:
+      - ./database/mysql/.env
     ports:
       - 3001:3000
     networks:
@@ -65,8 +67,6 @@ services:
     #   - TZ = ${TZ}
     env_file:
       - ./database/mysql/.env
-    ports:
-      - 3306:3306
     networks:
       - backend
 
