@@ -68,7 +68,7 @@ export default class TaskTable {
         return task;
     }
 
-    public async update(task: Task) {
+    public async update(task: Task): Promise<number> {
         if (task == null) throw new Error("task is null");
 
         let query = "UPDATE task SET content = ?, due_date = ?, completed = ? WHERE id = ?";
@@ -77,9 +77,15 @@ export default class TaskTable {
             if (err) throw err;
             console.log("1 record updated");
         });
+        let res = await this.database.query("SELECT ROW_COUNT() as count;", values, (err, result) => {
+            if (err) throw err;
+            return result;
+        });
+        let count = JSON.parse(JSON.stringify(res[0])).count;
+        return count ?? 0;
     }
 
-    public async deleteById(id: string) {
+    public async deleteById(id: string): Promise<number> {
         if (String.isNull(id)) throw new Error("id is null");
 
         let query = "DELETE FROM task WHERE id = ?";
@@ -88,6 +94,12 @@ export default class TaskTable {
             if (err) throw err;
             console.log("1 record deleted");
         });
+        let res = await this.database.query("SELECT ROW_COUNT() as count;", values, (err, result) => {
+            if (err) throw err;
+            return result;
+        });
+        let count = JSON.parse(JSON.stringify(res[0])).count;
+        return count ?? 0;
     }
 
     public async deleteAll() {

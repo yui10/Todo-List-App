@@ -12,6 +12,11 @@ describe('TaskTable', () => {
         await table.deleteAll();
     });
 
+    afterAll(async () => {
+        await table.deleteAll();
+        await table.close();
+    });
+
 
     test('Create a task.', async () => {
         let tasks = [
