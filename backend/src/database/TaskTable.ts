@@ -81,7 +81,7 @@ export default class TaskTable {
             if (err) throw err;
             return result;
         });
-        let count = JSON.parse(JSON.stringify(res[0])).count;
+        let count = res[0]["count"];
         return count ?? 0;
     }
 
@@ -98,7 +98,7 @@ export default class TaskTable {
             if (err) throw err;
             return result;
         });
-        let count = JSON.parse(JSON.stringify(res[0])).count;
+        let count = res[0]["count"];
         return count ?? 0;
     }
 
