@@ -1,32 +1,15 @@
 import React from 'react'
+import Task from '../common/Task';
 
 type Props = {
-    tasks: {
-        id: number;
-        text: string;
-        completed: boolean;
-    }[];
-    setTasks: (tasks: {
-        id: number;
-        text: string;
-        completed: boolean;
-    }[]) => void;
+    tasks: Task[];
+    setTasks: (tasks: Task[]) => void;
 }
-
-type Tasks = {
-    id: number;
-    text: string;
-    completed: boolean;
-}[]
 
 const DeleteTask = (props: Props) => {
     const handleDelete = () => {
         const newTasks = props.tasks.filter((task) => {
-            return !task.completed;
-        });
-        let count = 1;
-        newTasks.forEach((task) => {
-            task.id = count++;
+            return !task.isCompleted();
         });
         props.setTasks(newTasks)
     }

@@ -3,24 +3,11 @@ import Modal from "react-modal";
 import Task from '../common/Task';
 
 type Props = {
-    tasks: {
-        id: number;
-        text: string;
-        completed: boolean;
-    }[];
-    setTasks: (task: {
-        id: number;
-        text: string;
-        completed: boolean;
-    }[]) => void;
+    tasks: Task[];
+    setTasks: (task: Task[]) => void;
     CreateTask: (task: Task) => void;
 }
 
-type Tasks = {
-    id: number
-    text: string
-    completed: boolean
-}[];
 
 Modal.setAppElement("#root");
 
@@ -31,18 +18,18 @@ const AddTask = (props: Props) => {
     const addTask = () => {
         if (taskText.current === null) return;
         if (taskText.current.value === '') return;
-        let task = { id: 0, text: taskText.current.value, completed: false };
+        let id = 0;
         if (props.tasks.length === 0) {
-            task.id = 1;
+            id = 1;
         }
         else {
-            task.id = props.tasks.length + 1;
+            id = props.tasks.length + 1;
         }
+        let task = new Task(String(id), taskText.current.value, new Date().toString(), false);
 
-        const newTasks: Tasks = [...props.tasks, task];
+        const newTasks: Task[] = [...props.tasks, task];
         props.setTasks(newTasks);
-        let newTask = new Task(String(task.id), task.text, new Date().toString(), task.completed);
-        props.CreateTask(newTask);
+        props.CreateTask(task);
         taskText.current.value = '';
         closeModal();
     };

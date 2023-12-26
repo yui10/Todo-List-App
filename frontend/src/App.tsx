@@ -4,13 +4,7 @@ import AddTask from './components/AddTask';
 import TodoList from './components/TaskList';
 import DeleteTask from './components/DeleteTask';
 import TaskHook from './hooks/TaskHook';
-
-
-type Task = {
-  id: number;
-  text: string;
-  completed: boolean;
-};
+import Task from './common/Task';
 
 function App() {
   const { CreateTask } = TaskHook();

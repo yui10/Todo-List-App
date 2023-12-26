@@ -1,37 +1,17 @@
 import React from 'react'
+import Task from '../common/Task';
 
 type Props = {
-    task: {
-        id: number;
-        text: string;
-        completed: boolean;
-    };
-    tasks: {
-        id: number;
-        text: string;
-        completed: boolean;
-    }[];
-    setTasks: (tasks: {
-        id: number;
-        text: string;
-        completed: boolean;
-    }[]) => void;
+    task: Task;
+    tasks: Task[];
+    setTasks: (tasks: Task[]) => void;
 }
-
-type Tasks = {
-    id: number;
-    text: string;
-    completed: boolean;
-}[]
 
 const TaskItem = (props: Props) => {
     const handleComplete = () => {
         const newTasks = props.tasks.map((task) => {
-            if (task.id === props.task.id) {
-                return {
-                    ...task,
-                    completed: !task.completed
-                }
+            if (task.getId() === props.task.getId()) {
+                return new Task(task.getId(), task.getContent(), task.getDueDate(), !task.isCompleted());
             }
             return task
         });
@@ -40,8 +20,8 @@ const TaskItem = (props: Props) => {
     return (
         <>
             <div className='task'>
-                <input type='checkbox' id={String(props.task.id)} checked={props.task.completed} onChange={handleComplete} readOnly />
-                <label htmlFor={String(props.task.id)}>Todo{props.task.id} : {props.task.text}</label>
+                <input type='checkbox' id={props.task.getId()} checked={props.task.isCompleted()} onChange={handleComplete} readOnly />
+                <label htmlFor={props.task.getId()}>Todo{props.task.getId()} : {props.task.getContent()}</label>
             </div>
         </>
     )
