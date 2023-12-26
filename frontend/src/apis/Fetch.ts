@@ -2,8 +2,8 @@ const baseUrl = 'http://localhost:3001';
 
 export default class Fetch {
     static async get(path: string) {
-        const response = await fetch(`${baseUrl}${path}`);
-        return await response.json();
+        const response = await fetch(`${baseUrl}${path}`, { method: 'GET' });
+        return response.json();
     }
 
     static async post(path: string, body: any) {
@@ -14,7 +14,7 @@ export default class Fetch {
             },
             body: JSON.stringify(body),
         });
-        return await response.json();
+        return response.json();
     }
 
     static async put(path: string, body: any) {
@@ -25,13 +25,13 @@ export default class Fetch {
             },
             body: JSON.stringify(body),
         });
-        return await response.json();
+        return response.json();
     }
 
     static async delete(path: string) {
         const response = await fetch(`${baseUrl}${path}`, {
             method: 'DELETE',
         });
-        return await response.json();
+        return response.json();
     }
 }
