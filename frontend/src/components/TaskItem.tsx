@@ -24,7 +24,7 @@ type Tasks = {
     completed: boolean;
 }[]
 
-const Task = (props: Props) => {
+const TaskItem = (props: Props) => {
     const handleComplete = () => {
         const newTasks = props.tasks.map((task) => {
             if (task.id === props.task.id) {
@@ -47,4 +47,4 @@ const Task = (props: Props) => {
     )
 }
 
-export default Task
+export default TaskItem

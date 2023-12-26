@@ -1,5 +1,5 @@
 import React from 'react'
-import Task from './Task'
+import TaskItem from './TaskItem';
 
 type Props = {
   tasks: {
@@ -20,7 +20,7 @@ const TodoList = (props: Props) => {
       <div>TodoList</div>
       {
         props.tasks.map((task) => (
-          <Task key={task.id} task={task} tasks={props.tasks} setTasks={props.setTasks} />
+          <TaskItem key={task.id} task={task} tasks={props.tasks} setTasks={props.setTasks} />
         ))
       }
     </>
