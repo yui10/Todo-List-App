@@ -4,7 +4,6 @@ import Task from '../common/Task';
 
 type Props = {
     tasks: Task[];
-    setTasks: (task: Task[]) => void;
     CreateTask: (task: Task) => void;
 }
 
@@ -26,9 +25,6 @@ const AddTask = (props: Props) => {
             id = props.tasks.length + 1;
         }
         let task = new Task(String(id), taskText.current.value, new Date().toString(), false);
-
-        const newTasks: Task[] = [...props.tasks, task];
-        props.setTasks(newTasks);
         props.CreateTask(task);
         taskText.current.value = '';
         closeModal();
