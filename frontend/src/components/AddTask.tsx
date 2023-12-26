@@ -1,4 +1,6 @@
-import React from 'react'
+import React from 'react';
+import Modal from "react-modal";
+import Task from '../common/Task';
 
 type Props = {
     tasks: {
@@ -11,6 +13,7 @@ type Props = {
         text: string;
         completed: boolean;
     }[]) => void;
+    CreateTask: (task: Task) => void;
 }
 
 type Tasks = {
@@ -19,8 +22,12 @@ type Tasks = {
     completed: boolean
 }[];
 
+Modal.setAppElement("#root");
+
 const AddTask = (props: Props) => {
     const taskText = React.useRef<HTMLInputElement>(null);
+    const [isOpen, setIsOpen] = React.useState(false);
+
     const addTask = () => {
         if (taskText.current === null) return;
         if (taskText.current.value === '') return;
@@ -34,13 +41,37 @@ const AddTask = (props: Props) => {
 
         const newTasks: Tasks = [...props.tasks, task];
         props.setTasks(newTasks);
+        let newTask = new Task(String(task.id), task.text, new Date().toString(), task.completed);
+        props.CreateTask(newTask);
         taskText.current.value = '';
+        closeModal();
     };
+
+    function openModal() {
+        setIsOpen(true);
+    };
+
+    function closeModal() {
+        setIsOpen(false);
+    };
+
     return (
         <div>
-            <input className='inputTask' type="text" ref={taskText} />
-            <button onClick={addTask}>Add Task</button>
-        </div>
+            <button onClick={openModal}>Add Task</button>
+            <Modal isOpen={isOpen}
+                onAfterOpen={openModal}
+                onAfterClose={closeModal}
+                onRequestClose={closeModal}
+            >
+                <p>タスク名</p>
+                <input className='inputTask' type="text" ref={taskText} />
+                <p>期限</p>
+                <input type="date" />
+                <br />
+                <button onClick={addTask}>Add Task</button>
+                <button onClick={closeModal}>Cancel</button>
+            </Modal>
+        </div >
     );
 };
 
