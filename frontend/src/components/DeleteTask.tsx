@@ -4,14 +4,15 @@ import Task from '../common/Task';
 type Props = {
     tasks: Task[];
     setTasks: (tasks: Task[]) => void;
+    DeleteTask: (task: Task) => void;
 }
 
-const DeleteTask = (props: Props) => {
+const TaskDelete = (props: Props) => {
     const handleDelete = () => {
-        const newTasks = props.tasks.filter((task) => {
-            return !task.isCompleted();
+        props.tasks.forEach((task) => {
+            if (task.isCompleted())
+                props.DeleteTask(task);
         });
-        props.setTasks(newTasks)
     }
 
     return (
@@ -21,4 +22,4 @@ const DeleteTask = (props: Props) => {
     )
 }
 
-export default DeleteTask
+export default TaskDelete

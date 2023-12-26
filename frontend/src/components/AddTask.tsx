@@ -3,8 +3,13 @@ import Modal from "react-modal";
 import Task from '../common/Task';
 
 type Props = {
-    tasks: Task[];
+    tasks: Task;
+    EnableEdit: boolean;
+    isOpenModal: boolean;
+    setEnableEdit: (enableEdit: boolean) => void;
+    setIsOpenModal: (isOpenModal: boolean) => void;
     CreateTask: (task: Task) => void;
+    UpdateTask: (task: Task) => void;
 }
 
 
@@ -12,46 +17,46 @@ Modal.setAppElement("#root");
 
 const AddTask = (props: Props) => {
     const taskText = React.useRef<HTMLInputElement>(null);
-    const [isOpen, setIsOpen] = React.useState(false);
 
     const addTask = () => {
         if (taskText.current === null) return;
         if (taskText.current.value === '') return;
-        let id = 0;
-        if (props.tasks.length === 0) {
-            id = 1;
-        }
-        else {
-            id = props.tasks.length + 1;
-        }
-        let task = new Task(String(id), taskText.current.value, new Date().toString(), false);
-        props.CreateTask(task);
+        let id = props.tasks.getId() ?? '0';
+        let task = new Task(id, taskText.current.value, new Date().toString(), false);
+        if (props.EnableEdit)
+            props.UpdateTask(task);
+        else
+            props.CreateTask(task);
         taskText.current.value = '';
         closeModal();
     };
 
     function openModal() {
-        setIsOpen(true);
+        props.setIsOpenModal(true);
     };
 
     function closeModal() {
-        setIsOpen(false);
+        props.setEnableEdit(false);
+        props.setIsOpenModal(false);
     };
 
     return (
         <div>
             <button onClick={openModal}>Add Task</button>
-            <Modal isOpen={isOpen}
+            <Modal isOpen={props.isOpenModal}
                 onAfterOpen={openModal}
                 onAfterClose={closeModal}
                 onRequestClose={closeModal}
             >
                 <p>タスク名</p>
-                <input className='inputTask' type="text" ref={taskText} />
+                <input className='inputTask' type="text" ref={taskText} defaultValue={props.tasks.getContent()} />
                 <p>期限</p>
                 <input type="date" />
                 <br />
-                <button onClick={addTask}>Add Task</button>
+                {props.EnableEdit ?
+                    <button onClick={addTask}>Update Task</button> :
+                    <button onClick={addTask}>Add Task</button>
+                }
                 <button onClick={closeModal}>Cancel</button>
             </Modal>
         </div >
