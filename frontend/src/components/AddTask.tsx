@@ -24,7 +24,7 @@ const AddTask = (props: Props) => {
     const addTask = () => {
         if (taskText.current === null) return;
         if (taskText.current.value === '') return;
-        const day = dayjs(dueDate.current?.value);
+        const day = dayjs(dueDate.current?.value).utc();
         let id = props.tasks.getId() ?? '0';
         let task = new Task(id, dayjs(), taskText.current.value, day.format("YYYY-MM-DDThh:mmZ"), false);
         if (props.EnableEdit)
