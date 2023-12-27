@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from "react-modal";
+import dayjs from 'dayjs';
 import Task from '../common/Task';
 
 type Props = {
@@ -23,8 +24,9 @@ const AddTask = (props: Props) => {
     const addTask = () => {
         if (taskText.current === null) return;
         if (taskText.current.value === '') return;
+        const day = dayjs(dueDate.current?.value);
         let id = props.tasks.getId() ?? '0';
-        let task = new Task(id, taskText.current.value, new Date().toISOString(), false);
+        let task = new Task(id, taskText.current.value, day.format("YYYY-MM-DDThh:mmZ"), false);
         if (props.EnableEdit)
             props.UpdateTask(task);
         else
@@ -55,7 +57,8 @@ const AddTask = (props: Props) => {
                 <input className='inputTask' type="text" ref={taskText} defaultValue={props.tasks.getContent()} />
                 <p>期限</p>
                 <input type="datetime-local" id="DueDateTime"
-                    min="2000-01-01T00:00" max="2099-12-31T23:59" ref={dueDate} />
+                    min="2000-01-01T00:00" max="2099-12-31T23:59" ref={dueDate}
+                    defaultValue={props.tasks.getDueDate()} />
                 <br />
                 {props.EnableEdit ?
                     <button onClick={addTask}>Update Task</button> :
