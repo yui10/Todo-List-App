@@ -1,28 +1,39 @@
 import React from 'react'
-import Task from './Task'
+import TaskItem from './TaskItem';
+import Task from '../common/Task';
 
 type Props = {
-  tasks: {
-    id: number;
-    text: string;
-    completed: boolean;
-  }[];
-  setTasks: (tasks: {
-    id: number;
-    text: string;
-    completed: boolean;
-  }[]) => void;
+  tasks: Task[];
+  setEditTask: (task: Task) => void;
+  setEnableEdit: (enableEdit: boolean) => void;
+  setIsOpenModal: (isOpenModal: boolean) => void;
+  setTasks: (tasks: Task[]) => void;
+  updateTask: (task: Task) => void;
 }
 
 const TodoList = (props: Props) => {
   return (
     <>
       <div>TodoList</div>
-      {
-        props.tasks.map((task) => (
-          <Task key={task.id} task={task} tasks={props.tasks} setTasks={props.setTasks} />
-        ))
-      }
+      <table>
+        <thead>
+          <tr>
+            <th>Todo</th>
+            <th>内容</th>
+            <th>期限</th>
+            <th>編集</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            props.tasks.map((task) => (
+              <TaskItem key={task.getDueDate()} task={task} tasks={props.tasks} setEditTask={props.setEditTask}
+                setEnableEdit={props.setEnableEdit} setIsOpenModal={props.setIsOpenModal}
+                setTasks={props.setTasks} updateTask={props.updateTask} />
+            ))
+          }
+        </tbody>
+      </table>
     </>
   )
 }
