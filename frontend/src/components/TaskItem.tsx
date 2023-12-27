@@ -29,11 +29,12 @@ const TaskItem = (props: Props) => {
     }
     return (
         <>
-            <div className='task'>
-                <input type='checkbox' id={props.task.getId()} checked={props.task.isCompleted()} onChange={handleComplete} readOnly />
-                <label htmlFor={props.task.getId()}>Todo{props.task.getId()} : {props.task.getContent()}</label>
-                <button onClick={handleUpdate}>編集</button>
-            </div>
+            <tr>
+                <td><input type='checkbox' id={props.task.getId()} checked={props.task.isCompleted()} onChange={handleComplete} readOnly /></td>
+                <td><label htmlFor={props.task.getId()}>{props.task.getContent()}</label></td>
+                <td>{props.task.getDueDate()}</td>
+                <td><button onClick={handleUpdate}>編集</button></td>
+            </tr>
         </>
     )
 }

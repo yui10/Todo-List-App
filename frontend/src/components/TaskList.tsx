@@ -15,13 +15,25 @@ const TodoList = (props: Props) => {
   return (
     <>
       <div>TodoList</div>
-      {
-        props.tasks.map((task) => (
-          <TaskItem key={task.getDueDate()} task={task} tasks={props.tasks} setEditTask={props.setEditTask}
-            setEnableEdit={props.setEnableEdit} setIsOpenModal={props.setIsOpenModal}
-            setTasks={props.setTasks} updateTask={props.updateTask} />
-        ))
-      }
+      <table>
+        <thead>
+          <tr>
+            <th>Todo</th>
+            <th>内容</th>
+            <th>期限</th>
+            <th>編集</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            props.tasks.map((task) => (
+              <TaskItem key={task.getDueDate()} task={task} tasks={props.tasks} setEditTask={props.setEditTask}
+                setEnableEdit={props.setEnableEdit} setIsOpenModal={props.setIsOpenModal}
+                setTasks={props.setTasks} updateTask={props.updateTask} />
+            ))
+          }
+        </tbody>
+      </table>
     </>
   )
 }

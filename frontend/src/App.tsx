@@ -14,7 +14,7 @@ function App() {
   return (
     <div className="App" id='root'>
       <h1>TODO LIST</h1>
-      <AddTask tasks={EditTask}
+      <AddTask tasks={EditTask} setEditTask={setEditTask}
         EnableEdit={EnableEdit} setEnableEdit={setEnableEdit}
         isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal}
         CreateTask={CreateTask} UpdateTask={UpdateTask} />

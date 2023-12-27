@@ -6,6 +6,7 @@ type Props = {
     tasks: Task;
     EnableEdit: boolean;
     isOpenModal: boolean;
+    setEditTask: (task: Task) => void;
     setEnableEdit: (enableEdit: boolean) => void;
     setIsOpenModal: (isOpenModal: boolean) => void;
     CreateTask: (task: Task) => void;
@@ -17,12 +18,13 @@ Modal.setAppElement("#root");
 
 const AddTask = (props: Props) => {
     const taskText = React.useRef<HTMLInputElement>(null);
+    const dueDate = React.useRef<HTMLInputElement>(null);
 
     const addTask = () => {
         if (taskText.current === null) return;
         if (taskText.current.value === '') return;
         let id = props.tasks.getId() ?? '0';
-        let task = new Task(id, taskText.current.value, new Date().toString(), false);
+        let task = new Task(id, taskText.current.value, new Date().toISOString(), false);
         if (props.EnableEdit)
             props.UpdateTask(task);
         else
@@ -36,6 +38,7 @@ const AddTask = (props: Props) => {
     };
 
     function closeModal() {
+        props.setEditTask(new Task("", "", ""));
         props.setEnableEdit(false);
         props.setIsOpenModal(false);
     };
@@ -51,7 +54,8 @@ const AddTask = (props: Props) => {
                 <p>タスク名</p>
                 <input className='inputTask' type="text" ref={taskText} defaultValue={props.tasks.getContent()} />
                 <p>期限</p>
-                <input type="date" />
+                <input type="datetime-local" id="DueDateTime"
+                    min="2000-01-01T00:00" max="2099-12-31T23:59" ref={dueDate} />
                 <br />
                 {props.EnableEdit ?
                     <button onClick={addTask}>Update Task</button> :
