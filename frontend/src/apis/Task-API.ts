@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import Fetch from "./Fetch";
 import Task from "../common/Task";
 export default class TaskApi {
@@ -5,7 +6,7 @@ export default class TaskApi {
         const response = await Fetch.get('/api/task');
         let tasks: Task[] = [];
         for (let task of response)
-            tasks.push(new Task(task.id, task.content, task.due_date, task.completed));
+            tasks.push(new Task(task.id, dayjs(task.created_at), task.content, task.due_date, task.completed));
         return tasks;
     }
 

@@ -1,5 +1,6 @@
 import Task from '../common/Task';
 import TaskTable from '../database/TaskTable';
+import dayjs from 'dayjs';
 
 describe('TaskTable', () => {
     let table = new TaskTable();
@@ -20,8 +21,8 @@ describe('TaskTable', () => {
 
     test('Create a task.', async () => {
         let tasks = [
-            new Task("1", "content1", new Date().toString(), true),
-            new Task("2", "content2", new Date().toString(), false)
+            new Task("1", dayjs(), "content1", new Date().toString(), true),
+            new Task("2", dayjs(), "content2", new Date().toString(), false)
         ];
         for (let task of tasks)
             await table.append(task);
@@ -33,8 +34,8 @@ describe('TaskTable', () => {
 
     test('Select all tasks.', async () => {
         let tasks = [
-            new Task("1", "content1", new Date().toString(), true),
-            new Task("2", "content2", new Date().toString(), false)
+            new Task("1", dayjs(), "content1", new Date().toString(), true),
+            new Task("2", dayjs(), "content2", new Date().toString(), false)
         ];
         for (let task of tasks)
             await table.append(task);
@@ -46,13 +47,13 @@ describe('TaskTable', () => {
 
     test('Update task content by id.', async () => {
         let tasks = [
-            new Task("1", "content1", new Date().toString(), true),
-            new Task("2", "content2", new Date().toString(), false)
+            new Task("1", dayjs(), "content1", new Date().toString(), true),
+            new Task("2", dayjs(), "content2", new Date().toString(), false)
         ];
         for (let task of tasks)
             await table.append(task);
 
-        let updatedTask1 = new Task(tasks[0].getId(), "updated content", tasks[0].getDueDate(), tasks[0].isCompleted());
+        let updatedTask1 = new Task(tasks[0].getId(), tasks[0].getCreatedAt(), "updated content", tasks[0].getDueDate(), tasks[0].isCompleted());
         await table.update(updatedTask1);
         let updatedTask_res = await table.findById(updatedTask1.getId());
         expect(updatedTask_res).toEqual(updatedTask1);
@@ -60,8 +61,8 @@ describe('TaskTable', () => {
 
     test('Delete task by id.', async () => {
         let tasks = [
-            new Task("1", "content1", new Date().toString(), true),
-            new Task("2", "content2", new Date().toString(), false)
+            new Task("1", dayjs(), "content1", new Date().toString(), true),
+            new Task("2", dayjs(), "content2", new Date().toString(), false)
         ];
 
         for (let task of tasks)

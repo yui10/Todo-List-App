@@ -15,7 +15,7 @@ const TaskItem = (props: Props) => {
     const handleComplete = () => {
         const newTasks = props.tasks.map((task) => {
             if (task.getId() === props.task.getId()) {
-                return new Task(task.getId(), task.getContent(), task.getDueDate(), !task.isCompleted());
+                return new Task(task.getId(), task.getCreatedAt(), task.getContent(), task.getDueDate(), !task.isCompleted());
             }
             return task
         });

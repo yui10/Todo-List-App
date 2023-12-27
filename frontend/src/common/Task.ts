@@ -1,11 +1,15 @@
+import dayjs from "dayjs";
+
 export default class Task {
     private id: string;
+    private created_at: dayjs.Dayjs;
     private content: string;
     private due_date: string;
     private completed: boolean;
 
-    constructor(id: string, content: string, due_date: string, completed: boolean = false) {
+    constructor(id: string, created_at: dayjs.Dayjs, content: string, due_date: string, completed: boolean = false) {
         this.id = id;
+        this.created_at = created_at;
         this.content = content;
         this.due_date = due_date;
         this.completed = completed;
@@ -13,6 +17,10 @@ export default class Task {
 
     public getId(): string {
         return this.id;
+    }
+
+    public getCreatedAt(): dayjs.Dayjs {
+        return this.created_at;
     }
 
     public getContent(): string {

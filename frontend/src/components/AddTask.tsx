@@ -26,7 +26,7 @@ const AddTask = (props: Props) => {
         if (taskText.current.value === '') return;
         const day = dayjs(dueDate.current?.value);
         let id = props.tasks.getId() ?? '0';
-        let task = new Task(id, taskText.current.value, day.format("YYYY-MM-DDThh:mmZ"), false);
+        let task = new Task(id, dayjs(), taskText.current.value, day.format("YYYY-MM-DDThh:mmZ"), false);
         if (props.EnableEdit)
             props.UpdateTask(task);
         else
@@ -40,7 +40,7 @@ const AddTask = (props: Props) => {
     };
 
     function closeModal() {
-        props.setEditTask(new Task("", "", ""));
+        props.setEditTask(new Task("", dayjs(), "", "", false));
         props.setEnableEdit(false);
         props.setIsOpenModal(false);
     };
