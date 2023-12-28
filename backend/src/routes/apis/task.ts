@@ -1,5 +1,6 @@
 import Express from 'express';
 import { v4 as uuid } from 'uuid';
+import dayjs from 'dayjs';
 import TaskTable from '../../database/TaskTable';
 import Task from '../../common/Task';
 import * as error from '../../common/errorException';
@@ -24,10 +25,9 @@ router.post('/', async (req, res) => {
       return error.default(error.BadRequest('content is required'), req, res);
 
     id = uuid();
-    if (!due_date) due_date = new Date().toString();
     if (!completed) completed = false;
 
-    const task = new Task(id, content, due_date, completed);
+    const task = new Task(id, dayjs(), content, dayjs(due_date), completed);
     await taskTable.append(task);
     res.status(201).json(task);
   } catch (err) {
@@ -38,14 +38,14 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const { id, content, due_date, completed } = req.body;
+    const { id, created_at, content, due_date, completed } = req.body;
     if (id !== req.params.id)
       return error.default(error.BadRequest('id is not matched'), req, res);
 
-    if (!content && !due_date && !completed)
+    if (!content && !completed)
       return error.default(error.BadRequest('content is required'), req, res);
 
-    const task = new Task(id, content, due_date, completed);
+    const task = new Task(id, created_at, content, dayjs(due_date), completed);
     const update_count = await taskTable.update(task);
     if (update_count > 0)
       res.status(200).json(task);

@@ -1,4 +1,5 @@
 import React from 'react';
+import dayjs from 'dayjs';
 import './App.css';
 import AddTask from './components/AddTask';
 import TodoList from './components/TaskList';
@@ -9,7 +10,7 @@ import Task from './common/Task';
 function App() {
   const { taskList, setTaskList, CreateTask, UpdateTask, DeleteTask } = TaskHook();
   const [EnableEdit, setEnableEdit] = React.useState(false);
-  const [EditTask, setEditTask] = React.useState(new Task("", "", ""));
+  const [EditTask, setEditTask] = React.useState(new Task("", dayjs(), "", "", false));
   const [isOpenModal, setIsOpenModal] = React.useState(false);
   return (
     <div className="App" id='root'>

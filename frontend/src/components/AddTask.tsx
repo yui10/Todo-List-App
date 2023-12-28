@@ -24,9 +24,9 @@ const AddTask = (props: Props) => {
     const addTask = () => {
         if (taskText.current === null) return;
         if (taskText.current.value === '') return;
-        const day = dayjs(dueDate.current?.value);
+        const day = dayjs(dueDate.current?.value).utc();
         let id = props.tasks.getId() ?? '0';
-        let task = new Task(id, taskText.current.value, day.format("YYYY-MM-DDThh:mmZ"), false);
+        let task = new Task(id, dayjs(), taskText.current.value, day.format("YYYY-MM-DDThh:mmZ"), false);
         if (props.EnableEdit)
             props.UpdateTask(task);
         else
@@ -40,7 +40,7 @@ const AddTask = (props: Props) => {
     };
 
     function closeModal() {
-        props.setEditTask(new Task("", "", ""));
+        props.setEditTask(new Task("", dayjs(), "", "", false));
         props.setEnableEdit(false);
         props.setIsOpenModal(false);
     };
@@ -58,7 +58,7 @@ const AddTask = (props: Props) => {
                 <p>期限</p>
                 <input type="datetime-local" id="DueDateTime"
                     min="2000-01-01T00:00" max="2099-12-31T23:59" ref={dueDate}
-                    defaultValue={props.tasks.getDueDate()} />
+                    defaultValue={props.tasks.getDueDateLocale()} />
                 <br />
                 {props.EnableEdit ?
                     <button onClick={addTask}>Update Task</button> :

@@ -1,6 +1,7 @@
 import * as mysql from 'mysql';
 import Task from '../common/Task';
 import MySQLAdapter from './MySQLAdapter';
+import dayjs from 'dayjs';
 
 export default class TaskTable {
     private database: MySQLAdapter;
@@ -17,8 +18,9 @@ export default class TaskTable {
         this.database.connect();
         let query = `CREATE TABLE IF NOT EXISTS task (
             id TEXT NOT NULL,
+            created_at DATETIME(3) NOT NULL,
             content TEXT NOT NULL,
-            due_date TEXT NOT NULL,
+            due_date TEXT,
             completed BOOLEAN NOT NULL,
             PRIMARY KEY(id(32))
             )`;
@@ -32,8 +34,9 @@ export default class TaskTable {
     public async append(task: Task) {
         if (task == null) throw new Error("task is null");
 
-        let query = "INSERT INTO task (id, content, due_date, completed) VALUES (?,?,?,?)";
-        let values = [task.getId(), task.getContent(), task.getDueDate(), task.isCompleted()];
+        let query = "INSERT INTO task (id, created_at, content, due_date, completed) VALUES (?,?,?,?,?)";
+        let due_date = task.getDueDate().isValid() ? task.getDueDate().format("YYYY-MM-DDTHH:mm:ss.SSSZ") : null;
+        let values = [task.getId(), task.getCreatedAt().format("YYYY-MM-DDTHH:mm:ss.SSSZ"), task.getContent(), due_date, task.isCompleted()];
         await this.database.query(query, values, (err, result) => {
             if (err) throw err;
             console.log("1 record inserted");
@@ -46,7 +49,7 @@ export default class TaskTable {
         await this.database.query(query, (err, result) => {
             if (err) throw err;
             for (let row of result) {
-                let task = new Task(row.id, row.content, row.due_date, Boolean(row.completed));
+                let task = new Task(row.id, dayjs(row.created_at), row.content, dayjs(row.due_date), Boolean(row.completed));
                 tasks.push(task);
             }
         });
@@ -58,12 +61,12 @@ export default class TaskTable {
 
         let query = "SELECT * FROM task WHERE id = ?";
         let values = [id];
-        let task: Task = new Task("", "", "", false);
+        let task: Task = new Task("", dayjs(), "", dayjs(), false);
         await this.database.query(query, values, (err, result) => {
             if (err) throw err;
             if (result.length == 0) return null;
             let row = result[0];
-            task = new Task(row.id, row.content, row.due_date, Boolean(row.completed));
+            task = new Task(row.id, dayjs(row.created_at), row.content, dayjs(row.due_date), Boolean(row.completed));
         });
         return task;
     }
@@ -72,7 +75,8 @@ export default class TaskTable {
         if (task == null) throw new Error("task is null");
 
         let query = "UPDATE task SET content = ?, due_date = ?, completed = ? WHERE id = ?";
-        let values = [task.getContent(), task.getDueDate(), task.isCompleted(), task.getId()];
+        let due_date = task.getDueDate().isValid() ? task.getDueDate().format("YYYY-MM-DDTHH:mm:ss.SSSZ") : null;
+        let values = [task.getContent(), due_date, task.isCompleted(), task.getId()];
         await this.database.query(query, values, (err, result) => {
             if (err) throw err;
             console.log("1 record updated");

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import dayjs from "dayjs";
 import TaskApi from "../apis/Task-API";
 import Task from "../common/Task";
 
@@ -12,8 +13,8 @@ function useTaskHook() {
     }, []);
 
     const CreateTask = (task: Task) => {
-        TaskApi.createTask(task).then((response) => {
-            let task = new Task(response.id, response.content, response.due_date, response.completed);
+        TaskApi.createTask(task).then((response: any) => {
+            let task = new Task(response.id, dayjs(response.created_at), response.content, response.due_date, response.completed);
             setTaskList([...taskList, task]);
         });
     };
