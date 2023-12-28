@@ -1,4 +1,10 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Tokyo");
 
 export default class Task {
     private id: string;
@@ -29,6 +35,14 @@ export default class Task {
 
     public getDueDate(): string {
         return this.due_date;
+    }
+
+    public getDueDateLocale(): string {
+        let due_date = dayjs(this.due_date);
+        if (due_date.isValid())
+            return dayjs(this.due_date).tz().format('YYYY-MM-DDTHH:mm');
+        else
+            return '';
     }
 
     /**

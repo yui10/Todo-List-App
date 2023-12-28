@@ -58,7 +58,7 @@ const AddTask = (props: Props) => {
                 <p>期限</p>
                 <input type="datetime-local" id="DueDateTime"
                     min="2000-01-01T00:00" max="2099-12-31T23:59" ref={dueDate}
-                    defaultValue={props.tasks.getDueDate()} />
+                    defaultValue={props.tasks.getDueDateLocale()} />
                 <br />
                 {props.EnableEdit ?
                     <button onClick={addTask}>Update Task</button> :

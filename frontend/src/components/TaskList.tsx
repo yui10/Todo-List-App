@@ -27,7 +27,7 @@ const TodoList = (props: Props) => {
         <tbody>
           {
             props.tasks.map((task) => (
-              <TaskItem key={task.getDueDate()} task={task} tasks={props.tasks} setEditTask={props.setEditTask}
+              <TaskItem key={task.getId()} task={task} tasks={props.tasks} setEditTask={props.setEditTask}
                 setEnableEdit={props.setEnableEdit} setIsOpenModal={props.setIsOpenModal}
                 setTasks={props.setTasks} updateTask={props.updateTask} />
             ))

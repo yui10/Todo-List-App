@@ -13,13 +13,8 @@ type Props = {
 
 const TaskItem = (props: Props) => {
     const handleComplete = () => {
-        const newTasks = props.tasks.map((task) => {
-            if (task.getId() === props.task.getId()) {
-                return new Task(task.getId(), task.getCreatedAt(), task.getContent(), task.getDueDate(), !task.isCompleted());
-            }
-            return task
-        });
-        props.setTasks(newTasks);
+        const newTask = new Task(props.task.getId(), props.task.getCreatedAt(), props.task.getContent(), props.task.getDueDate(), !props.task.isCompleted());
+        props.updateTask(newTask);
     };
 
     const handleUpdate = () => {
@@ -32,7 +27,7 @@ const TaskItem = (props: Props) => {
             <tr>
                 <td><input type='checkbox' id={props.task.getId()} checked={props.task.isCompleted()} onChange={handleComplete} readOnly /></td>
                 <td><label htmlFor={props.task.getId()}>{props.task.getContent()}</label></td>
-                <td>{props.task.getDueDate()}</td>
+                <td>{props.task.getDueDateLocale()}</td>
                 <td><button onClick={handleUpdate}>編集</button></td>
             </tr>
         </>
