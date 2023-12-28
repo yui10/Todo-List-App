@@ -45,14 +45,7 @@ export default class TaskTable {
 
     public async findAll(): Promise<Task[]> {
         let query = "SELECT * FROM task";
-        let tasks: Task[] = [];
-        await this.database.query(query, (err, result) => {
-            if (err) throw err;
-            for (let row of result) {
-                let task = new Task(row.id, dayjs(row.created_at), row.content, dayjs(row.due_date), Boolean(row.completed));
-                tasks.push(task);
-            }
-        });
+        let tasks: Task[] = await this.find(query, []);
         return tasks;
     }
 
@@ -61,14 +54,21 @@ export default class TaskTable {
 
         let query = "SELECT * FROM task WHERE id = ?";
         let values = [id];
-        let task: Task = new Task("", dayjs(), "", dayjs(), false);
+        let tasks = await this.find(query, values);
+        if (tasks.length > 0) return tasks[0];
+        else return new Task("", dayjs(), "", dayjs(), false);
+    }
+
+    private async find(query: string, values: any[]): Promise<Task[]> {
+        let tasks: Task[] = [];
         await this.database.query(query, values, (err, result) => {
             if (err) throw err;
-            if (result.length == 0) return null;
-            let row = result[0];
-            task = new Task(row.id, dayjs(row.created_at), row.content, dayjs(row.due_date), Boolean(row.completed));
+            for (let row of result) {
+                let task = new Task(row.id, dayjs(row.created_at), row.content, dayjs(row.due_date), Boolean(row.completed));
+                tasks.push(task);
+            }
         });
-        return task;
+        return tasks;
     }
 
     public async update(task: Task): Promise<number> {
