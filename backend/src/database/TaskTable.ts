@@ -22,7 +22,7 @@ export default class TaskTable {
             content TEXT NOT NULL,
             due_date TEXT,
             completed BOOLEAN NOT NULL,
-            PRIMARY KEY(id(32))
+            PRIMARY KEY(id(22))
             )`;
         this.database.query(query);
     }

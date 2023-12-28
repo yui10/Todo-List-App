@@ -24,7 +24,8 @@ router.post('/', async (req, res) => {
     if (!content)
       return error.default(error.BadRequest('content is required'), req, res);
 
-    id = uuid();
+    const hexArray: number[] = uuid().replace('-', '').split('', 16).map((hex: string) => parseInt(hex, 16));
+    id = Buffer.from(hexArray).toString('base64').replace('==', '');
     if (!completed) completed = false;
 
     const task = new Task(id, dayjs(), content, dayjs(due_date), completed);
