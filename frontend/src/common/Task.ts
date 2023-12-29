@@ -45,6 +45,14 @@ export default class Task {
             return '';
     }
 
+    public getDueDateDayjs(): dayjs.Dayjs | null {
+        let due_date = dayjs(this.due_date);
+        if (due_date.isValid())
+            return due_date;
+        else
+            return null;
+    }
+
     /**
      * task is completed if status is COMPLETED and completed is true
      * @returns true if the task is completed, false otherwise
