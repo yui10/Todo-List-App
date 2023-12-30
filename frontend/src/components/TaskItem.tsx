@@ -1,4 +1,12 @@
 import React from 'react'
+import {
+    Button,
+    TableRow,
+    TableCell
+} from '@mui/material';
+import {
+    Edit as EditIcon
+} from '@mui/icons-material';
 import Task from '../common/Task';
 
 type Props = {
@@ -24,12 +32,13 @@ const TaskItem = (props: Props) => {
     }
     return (
         <>
-            <tr>
-                <td><input type='checkbox' id={props.task.getId()} checked={props.task.isCompleted()} onChange={handleComplete} readOnly /></td>
-                <td><label htmlFor={props.task.getId()}>{props.task.getContent()}</label></td>
-                <td>{props.task.getDueDateLocale()}</td>
-                <td><button onClick={handleUpdate}>編集</button></td>
-            </tr>
+            <TableRow key={props.task.getId()}>
+                <TableCell ><input type='checkbox' id={props.task.getId()} checked={props.task.isCompleted()} onChange={handleComplete} readOnly /></TableCell >
+                <TableCell ><label htmlFor={props.task.getId()}>{props.task.getContent()}</label></TableCell >
+                <TableCell >{props.task.getDueDateLocale()}</TableCell >
+                <TableCell >{props.task.getCreatedAt().format(Task.TimeFormatSeconds)}</TableCell >
+                <TableCell ><Button variant="contained" onClick={handleUpdate} endIcon={<EditIcon />}>編集</Button></TableCell >
+            </TableRow>
         </>
     )
 }

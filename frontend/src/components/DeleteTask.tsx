@@ -1,4 +1,10 @@
 import React from 'react'
+import {
+    Button
+} from '@mui/material';
+import {
+    Delete as DeleteIcon
+} from '@mui/icons-material';
 import Task from '../common/Task';
 
 type Props = {
@@ -16,9 +22,9 @@ const TaskDelete = (props: Props) => {
     }
 
     return (
-        <>
-            <button onClick={handleDelete}>削除</button>
-        </>
+        <div>
+            <Button variant="contained" onClick={handleDelete} endIcon={<DeleteIcon />}>削除</Button>
+        </div>
     )
 }
 
