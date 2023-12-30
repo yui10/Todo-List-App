@@ -20,6 +20,7 @@ type Props = {
   setIsOpenModal: (isOpenModal: boolean) => void;
   setTasks: (tasks: Task[]) => void;
   updateTask: (task: Task) => void;
+  DeleteTask: (task: Task) => void;
 }
 
 type Order = 'asc' | 'desc';
@@ -86,7 +87,7 @@ const TodoList = (props: Props) => {
               props.tasks.sort(Comparator(order, orderBy)).map((task, index) => (
                 <TaskItem key={index} task={task} tasks={props.tasks} setEditTask={props.setEditTask}
                   setEnableEdit={props.setEnableEdit} setIsOpenModal={props.setIsOpenModal}
-                  setTasks={props.setTasks} updateTask={props.updateTask} />
+                  setTasks={props.setTasks} updateTask={props.updateTask} DeleteTask={props.DeleteTask}/>
               ))
             }
           </TableBody>

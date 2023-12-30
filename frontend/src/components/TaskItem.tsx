@@ -1,10 +1,12 @@
 import React from 'react'
 import {
     Button,
+    Stack,
     TableRow,
     TableCell
 } from '@mui/material';
 import {
+    Delete as DeleteIcon,
     Edit as EditIcon
 } from '@mui/icons-material';
 import Task from '../common/Task';
@@ -17,6 +19,7 @@ type Props = {
     setIsOpenModal: (isOpenModal: boolean) => void;
     setTasks: (tasks: Task[]) => void;
     updateTask: (task: Task) => void;
+    DeleteTask: (task: Task) => void;
 }
 
 const TaskItem = (props: Props) => {
@@ -30,6 +33,11 @@ const TaskItem = (props: Props) => {
         props.setEnableEdit(true);
         props.setIsOpenModal(true);
     }
+
+    const handleDelete = () => {
+        props.DeleteTask(props.task);
+    }
+
     return (
         <>
             <TableRow key={props.task.getId()}>
@@ -37,7 +45,12 @@ const TaskItem = (props: Props) => {
                 <TableCell ><label htmlFor={props.task.getId()}>{props.task.getContent()}</label></TableCell >
                 <TableCell >{props.task.getDueDateDayjs()?.format(Task.TimeFormat)}</TableCell >
                 <TableCell >{props.task.getCreatedAt().format(Task.TimeFormatSeconds)}</TableCell >
-                <TableCell ><Button variant="contained" onClick={handleUpdate} endIcon={<EditIcon />}>編集</Button></TableCell >
+                <TableCell >
+                    <Stack direction="row" spacing={2}>
+                        <Button variant="contained" onClick={handleUpdate} endIcon={<EditIcon />}>編集</Button>
+                        <Button variant="contained" onClick={handleDelete} endIcon={<DeleteIcon />}>削除</Button>
+                    </Stack>
+                </TableCell >
             </TableRow>
         </>
     )

@@ -23,7 +23,7 @@ const TaskDelete = (props: Props) => {
 
     return (
         <div>
-            <Button variant="contained" onClick={handleDelete} endIcon={<DeleteIcon />}>削除</Button>
+            <Button variant="contained" onClick={handleDelete} endIcon={<DeleteIcon />}>まとめて削除</Button>
         </div>
     )
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import {
+  CssBaseline,
   Stack
 } from '@mui/material';
 import './App.css';
@@ -17,6 +18,7 @@ function App() {
   const [isOpenModal, setIsOpenModal] = React.useState(false);
   return (
     <div className="App" id='root'>
+      <CssBaseline />
       <Stack spacing={5} >
         <h1>TODO LIST</h1>
         <AddTask tasks={EditTask} setEditTask={setEditTask}
@@ -27,7 +29,7 @@ function App() {
         <p>残りTodo件数 : {taskList.length}件</p>
         <TodoList tasks={taskList} setEditTask={setEditTask}
           setEnableEdit={setEnableEdit} setIsOpenModal={setIsOpenModal}
-          setTasks={setTaskList} updateTask={UpdateTask} />
+          setTasks={setTaskList} updateTask={UpdateTask} DeleteTask={DeleteTask} />
       </Stack>
     </div>
   );
