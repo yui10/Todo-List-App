@@ -20,7 +20,7 @@ type Props = {
   setIsOpenModal: (isOpenModal: boolean) => void;
   setTasks: (tasks: Task[]) => void;
   updateTask: (task: Task) => void;
-  DeleteTask: (task: Task) => void;
+  DeleteTask: (task: Task[]) => void;
 }
 
 type Order = 'asc' | 'desc';

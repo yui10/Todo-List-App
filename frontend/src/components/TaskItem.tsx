@@ -19,7 +19,7 @@ type Props = {
     setIsOpenModal: (isOpenModal: boolean) => void;
     setTasks: (tasks: Task[]) => void;
     updateTask: (task: Task) => void;
-    DeleteTask: (task: Task) => void;
+    DeleteTask: (task: Task[]) => void;
 }
 
 const TaskItem = (props: Props) => {
@@ -35,7 +35,7 @@ const TaskItem = (props: Props) => {
     }
 
     const handleDelete = () => {
-        props.DeleteTask(props.task);
+        props.DeleteTask([props.task]);
     }
 
     return (
