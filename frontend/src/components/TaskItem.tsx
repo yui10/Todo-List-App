@@ -35,7 +35,7 @@ const TaskItem = (props: Props) => {
             <TableRow key={props.task.getId()}>
                 <TableCell ><input type='checkbox' id={props.task.getId()} checked={props.task.isCompleted()} onChange={handleComplete} readOnly /></TableCell >
                 <TableCell ><label htmlFor={props.task.getId()}>{props.task.getContent()}</label></TableCell >
-                <TableCell >{props.task.getDueDateLocale()}</TableCell >
+                <TableCell >{props.task.getDueDateDayjs()?.format(Task.TimeFormat)}</TableCell >
                 <TableCell >{props.task.getCreatedAt().format(Task.TimeFormatSeconds)}</TableCell >
                 <TableCell ><Button variant="contained" onClick={handleUpdate} endIcon={<EditIcon />}>編集</Button></TableCell >
             </TableRow>

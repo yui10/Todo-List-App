@@ -39,14 +39,6 @@ export default class Task {
         return this.due_date;
     }
 
-    public getDueDateLocale(): string {
-        let due_date = dayjs(this.due_date);
-        if (due_date.isValid())
-            return dayjs(this.due_date).tz().format(Task.TimeFormat);
-        else
-            return '';
-    }
-
     public getDueDateDayjs(): dayjs.Dayjs | null {
         let due_date = dayjs(this.due_date);
         if (due_date.isValid())
