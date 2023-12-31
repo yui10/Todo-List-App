@@ -7,6 +7,8 @@ dayjs.extend(timezone);
 dayjs.tz.setDefault("Asia/Tokyo");
 
 export default class Task {
+    public static readonly TimeFormat = 'YYYY-MM-DDTHH:mm';
+    public static readonly TimeFormatSeconds = 'YYYY-MM-DDTHH:mm:ss';
     private id: string;
     private created_at: dayjs.Dayjs;
     private content: string;
@@ -37,12 +39,12 @@ export default class Task {
         return this.due_date;
     }
 
-    public getDueDateLocale(): string {
+    public getDueDateDayjs(): dayjs.Dayjs | null {
         let due_date = dayjs(this.due_date);
         if (due_date.isValid())
-            return dayjs(this.due_date).tz().format('YYYY-MM-DDTHH:mm');
+            return due_date;
         else
-            return '';
+            return null;
     }
 
     /**

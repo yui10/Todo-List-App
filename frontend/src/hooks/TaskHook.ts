@@ -27,11 +27,21 @@ function useTaskHook() {
         });
     }
 
-    const DeleteTask = (task: Task) => {
-        TaskApi.deleteTask(task).then((response) => {
-            if (response.id === undefined) return;
-            setTaskList(taskList.filter((_task) => _task.getId() !== task.getId()));
+    const DeleteTask = async (task: Task[]) => {
+        let delete_api = [];
+        for (let i = 0; i < task.length; i++) {
+            delete_api.push(TaskApi.deleteTask(task[i]));
+        }
+
+        let success_ids: string[] = [];
+        await Promise.all(delete_api).then((response) => {
+            console.log(response);
+            for (let i = 0; i < response.length; i++) {
+                if (response[i].id === undefined) continue;
+                success_ids.push(response[i].id);
+            }
         });
+        setTaskList(taskList.filter((_task) => !success_ids.includes(_task.getId())));
     };
 
 
