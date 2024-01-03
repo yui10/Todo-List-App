@@ -18,9 +18,8 @@ type Props = {
   setEditTask: (task: Task) => void;
   setEnableEdit: (enableEdit: boolean) => void;
   setIsOpenModal: (isOpenModal: boolean) => void;
-  setTasks: (tasks: Task[]) => void;
-  updateTask: (task: Task) => void;
-  DeleteTask: (task: Task[]) => void;
+  UpdateTask: (task: Task) => void;
+  DeleteTasks: (task: Task[]) => void;
 }
 
 type Order = 'asc' | 'desc';
@@ -53,7 +52,7 @@ function Comparator(order: Order, orderBy: OrderByType): (a: Task, b: Task) => n
   }
 }
 
-const TodoList = (props: Props) => {
+const TaskList = (props: Props) => {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByType>('getCreatedAt');
   const createSortHandler = (property: OrderByType) => (event: React.MouseEvent<unknown>) => {
@@ -85,9 +84,9 @@ const TodoList = (props: Props) => {
           <TableBody>
             {
               props.tasks.sort(Comparator(order, orderBy)).map((task, index) => (
-                <TaskItem key={index} task={task} tasks={props.tasks} setEditTask={props.setEditTask}
+                <TaskItem key={index} task={task} setEditTask={props.setEditTask}
                   setEnableEdit={props.setEnableEdit} setIsOpenModal={props.setIsOpenModal}
-                  setTasks={props.setTasks} updateTask={props.updateTask} DeleteTask={props.DeleteTask}/>
+                  UpdateTask={props.UpdateTask} DeleteTasks={props.DeleteTasks} />
               ))
             }
           </TableBody>
@@ -97,4 +96,4 @@ const TodoList = (props: Props) => {
   )
 }
 
-export default TodoList
+export default TaskList

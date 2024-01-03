@@ -27,7 +27,7 @@ function useTaskHook() {
         });
     }
 
-    const DeleteTask = async (task: Task[]) => {
+    const DeleteTasks = async (task: Task[]) => {
         let delete_api = [];
         for (let i = 0; i < task.length; i++) {
             delete_api.push(TaskApi.deleteTask(task[i]));
@@ -45,6 +45,6 @@ function useTaskHook() {
     };
 
 
-    return { taskList, setTaskList, CreateTask, UpdateTask, DeleteTask };
+    return { taskList, setTaskList, CreateTask, UpdateTask, DeleteTasks };
 }
 export default useTaskHook;

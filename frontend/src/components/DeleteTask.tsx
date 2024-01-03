@@ -9,8 +9,7 @@ import Task from '../common/Task';
 
 type Props = {
     tasks: Task[];
-    setTasks: (tasks: Task[]) => void;
-    DeleteTask: (task: Task[]) => void;
+    DeleteTasks: (task: Task[]) => void;
 }
 
 const TaskDelete = (props: Props) => {
@@ -20,7 +19,7 @@ const TaskDelete = (props: Props) => {
             if (task.isCompleted())
                 delete_task.push(task);
         });
-        props.DeleteTask(delete_task);
+        props.DeleteTasks(delete_task);
     }
 
     return (

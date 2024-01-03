@@ -13,19 +13,17 @@ import Task from '../common/Task';
 
 type Props = {
     task: Task;
-    tasks: Task[];
     setEditTask: (task: Task) => void;
     setEnableEdit: (enableEdit: boolean) => void;
     setIsOpenModal: (isOpenModal: boolean) => void;
-    setTasks: (tasks: Task[]) => void;
-    updateTask: (task: Task) => void;
-    DeleteTask: (task: Task[]) => void;
+    UpdateTask: (task: Task) => void;
+    DeleteTasks: (task: Task[]) => void;
 }
 
 const TaskItem = (props: Props) => {
     const handleComplete = () => {
         const newTask = new Task(props.task.getId(), props.task.getCreatedAt(), props.task.getContent(), props.task.getDueDate(), !props.task.isCompleted());
-        props.updateTask(newTask);
+        props.UpdateTask(newTask);
     };
 
     const handleUpdate = () => {
@@ -35,7 +33,7 @@ const TaskItem = (props: Props) => {
     }
 
     const handleDelete = () => {
-        props.DeleteTask([props.task]);
+        props.DeleteTasks([props.task]);
     }
 
     return (

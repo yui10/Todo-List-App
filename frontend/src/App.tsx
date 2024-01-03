@@ -6,13 +6,13 @@ import {
 } from '@mui/material';
 import './App.css';
 import AddTask from './components/AddTask';
-import TodoList from './components/TaskList';
+import TaskList from './components/TaskList';
 import TaskDelete from './components/DeleteTask';
 import TaskHook from './hooks/TaskHook';
 import Task from './common/Task';
 
 function App() {
-  const { taskList, setTaskList, CreateTask, UpdateTask, DeleteTask } = TaskHook();
+  const { taskList, setTaskList, CreateTask, UpdateTask, DeleteTasks } = TaskHook();
   const [EnableEdit, setEnableEdit] = React.useState(false);
   const [EditTask, setEditTask] = React.useState(new Task("", dayjs(), "", "", false));
   const [isOpenModal, setIsOpenModal] = React.useState(false);
@@ -25,11 +25,11 @@ function App() {
           EnableEdit={EnableEdit} setEnableEdit={setEnableEdit}
           isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal}
           CreateTask={CreateTask} UpdateTask={UpdateTask} />
-        <TaskDelete tasks={taskList} setTasks={setTaskList} DeleteTask={DeleteTask} />
+        <TaskDelete tasks={taskList} DeleteTasks={DeleteTasks} />
         <p>残りTodo件数 : {taskList.length}件</p>
-        <TodoList tasks={taskList} setEditTask={setEditTask}
+        <TaskList tasks={taskList} setEditTask={setEditTask}
           setEnableEdit={setEnableEdit} setIsOpenModal={setIsOpenModal}
-          setTasks={setTaskList} updateTask={UpdateTask} DeleteTask={DeleteTask} />
+          UpdateTask={UpdateTask} DeleteTasks={DeleteTasks} />
       </Stack>
     </div>
   );

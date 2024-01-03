@@ -39,7 +39,7 @@ const AddTask = (props: Props) => {
     const taskText = React.useRef<HTMLInputElement>(null);
     const dueDate = React.useRef<HTMLInputElement>(null);
 
-    const addTask = () => {
+    const handleAppend = () => {
         if (taskText.current === null) return;
         if (taskText.current.value === '') return;
         const day = dayjs(dueDate.current?.value).utc();
@@ -88,8 +88,8 @@ const AddTask = (props: Props) => {
                                 ampm={false} inputRef={dueDate} defaultValue={props.tasks.getDueDateDayjs()} />
                         </LocalizationProvider>
                         {props.EnableEdit ?
-                            <Button variant="contained" onClick={addTask} endIcon={<EditIcon />}>Edit Task</Button> :
-                            <Button variant="contained" onClick={addTask} endIcon={<AddIcon />}>Add Task</Button>
+                            <Button variant="contained" onClick={handleAppend} endIcon={<EditIcon />}>Edit Task</Button> :
+                            <Button variant="contained" onClick={handleAppend} endIcon={<AddIcon />}>Add Task</Button>
                         }
                         <Button variant="outlined" onClick={closeModal} endIcon={<CloseIcon />}>Cancel</Button>
                     </Stack>
