@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import './string.extension';
 
 export default class Task {
+    public static readonly DATE_FORMAT = "YYYY-MM-DDTHH:mm:ss.SSSZ";
     private id: string;
     private created_at: dayjs.Dayjs;
     private content: string;

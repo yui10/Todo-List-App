@@ -35,8 +35,8 @@ export default class TaskTable {
         if (task == null) throw new Error("task is null");
 
         let query = "INSERT INTO task (id, created_at, content, due_date, completed) VALUES (?,?,?,?,?)";
-        let due_date = task.getDueDate().isValid() ? task.getDueDate().format("YYYY-MM-DDTHH:mm:ss.SSSZ") : null;
-        let values = [task.getId(), task.getCreatedAt().format("YYYY-MM-DDTHH:mm:ss.SSSZ"), task.getContent(), due_date, task.isCompleted()];
+        let due_date = task.getDueDate().isValid() ? task.getDueDate().format(Task.DATE_FORMAT) : null;
+        let values = [task.getId(), task.getCreatedAt().format(Task.DATE_FORMAT), task.getContent(), due_date, task.isCompleted()];
         await this.database.query(query, values, (err, result) => {
             if (err) throw err;
             console.log("1 record inserted");
@@ -75,7 +75,7 @@ export default class TaskTable {
         if (task == null) throw new Error("task is null");
 
         let query = "UPDATE task SET content = ?, due_date = ?, completed = ? WHERE id = ?";
-        let due_date = task.getDueDate().isValid() ? task.getDueDate().format("YYYY-MM-DDTHH:mm:ss.SSSZ") : null;
+        let due_date = task.getDueDate().isValid() ? task.getDueDate().format(Task.DATE_FORMAT) : null;
         let values = [task.getContent(), due_date, task.isCompleted(), task.getId()];
         let res = await this.database.query(query, values, (err, result) => {
             if (err) throw err;
