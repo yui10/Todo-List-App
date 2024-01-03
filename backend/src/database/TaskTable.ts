@@ -77,16 +77,12 @@ export default class TaskTable {
         let query = "UPDATE task SET content = ?, due_date = ?, completed = ? WHERE id = ?";
         let due_date = task.getDueDate().isValid() ? task.getDueDate().format("YYYY-MM-DDTHH:mm:ss.SSSZ") : null;
         let values = [task.getContent(), due_date, task.isCompleted(), task.getId()];
-        await this.database.query(query, values, (err, result) => {
+        let res = await this.database.query(query, values, (err, result) => {
             if (err) throw err;
             console.log("1 record updated");
-        });
-        let res = await this.database.query("SELECT ROW_COUNT() as count;", values, (err, result) => {
-            if (err) throw err;
             return result;
         });
-        let count = res[0]["count"];
-        return count ?? 0;
+        return res["changedRows"] ?? 0;
     }
 
     public async deleteById(id: string): Promise<number> {
@@ -94,16 +90,12 @@ export default class TaskTable {
 
         let query = "DELETE FROM task WHERE id = ?";
         let values = [id];
-        await this.database.query(query, values, (err, result) => {
+        let res = await this.database.query(query, values, (err, result) => {
             if (err) throw err;
             console.log("1 record deleted");
-        });
-        let res = await this.database.query("SELECT ROW_COUNT() as count;", values, (err, result) => {
-            if (err) throw err;
             return result;
         });
-        let count = res[0]["count"];
-        return count ?? 0;
+        return res["affectedRows"] ?? 0;
     }
 
     public async deleteAll() {
