@@ -22,7 +22,7 @@ export default class TaskTable {
             content TEXT NOT NULL,
             due_date TEXT,
             completed BOOLEAN NOT NULL,
-            PRIMARY KEY(id(32))
+            PRIMARY KEY(id(22))
             )`;
         this.database.query(query);
     }
@@ -35,8 +35,8 @@ export default class TaskTable {
         if (task == null) throw new Error("task is null");
 
         let query = "INSERT INTO task (id, created_at, content, due_date, completed) VALUES (?,?,?,?,?)";
-        let due_date = task.getDueDate().isValid() ? task.getDueDate().format("YYYY-MM-DDTHH:mm:ss.SSSZ") : null;
-        let values = [task.getId(), task.getCreatedAt().format("YYYY-MM-DDTHH:mm:ss.SSSZ"), task.getContent(), due_date, task.isCompleted()];
+        let due_date = task.getDueDate().isValid() ? task.getDueDate().format(Task.DATE_FORMAT) : null;
+        let values = [task.getId(), task.getCreatedAt().format(Task.DATE_FORMAT), task.getContent(), due_date, task.isCompleted()];
         await this.database.query(query, values, (err, result) => {
             if (err) throw err;
             console.log("1 record inserted");
@@ -45,8 +45,23 @@ export default class TaskTable {
 
     public async findAll(): Promise<Task[]> {
         let query = "SELECT * FROM task";
+        let tasks: Task[] = await this.find(query, []);
+        return tasks;
+    }
+
+    public async findById(id: string): Promise<Task> {
+        if (String.isNull(id)) throw new Error("id is null");
+
+        let query = "SELECT * FROM task WHERE id = ?";
+        let values = [id];
+        let tasks = await this.find(query, values);
+        if (tasks.length > 0) return tasks[0];
+        else return new Task("", dayjs(), "", dayjs(), false);
+    }
+
+    private async find(query: string, values: any[]): Promise<Task[]> {
         let tasks: Task[] = [];
-        await this.database.query(query, (err, result) => {
+        await this.database.query(query, values, (err, result) => {
             if (err) throw err;
             for (let row of result) {
                 let task = new Task(row.id, dayjs(row.created_at), row.content, dayjs(row.due_date), Boolean(row.completed));
@@ -56,37 +71,18 @@ export default class TaskTable {
         return tasks;
     }
 
-    public async findById(id: string): Promise<Task> {
-        if (String.isNull(id)) throw new Error("id is null");
-
-        let query = "SELECT * FROM task WHERE id = ?";
-        let values = [id];
-        let task: Task = new Task("", dayjs(), "", dayjs(), false);
-        await this.database.query(query, values, (err, result) => {
-            if (err) throw err;
-            if (result.length == 0) return null;
-            let row = result[0];
-            task = new Task(row.id, dayjs(row.created_at), row.content, dayjs(row.due_date), Boolean(row.completed));
-        });
-        return task;
-    }
-
     public async update(task: Task): Promise<number> {
         if (task == null) throw new Error("task is null");
 
         let query = "UPDATE task SET content = ?, due_date = ?, completed = ? WHERE id = ?";
-        let due_date = task.getDueDate().isValid() ? task.getDueDate().format("YYYY-MM-DDTHH:mm:ss.SSSZ") : null;
+        let due_date = task.getDueDate().isValid() ? task.getDueDate().format(Task.DATE_FORMAT) : null;
         let values = [task.getContent(), due_date, task.isCompleted(), task.getId()];
-        await this.database.query(query, values, (err, result) => {
+        let res = await this.database.query(query, values, (err, result) => {
             if (err) throw err;
             console.log("1 record updated");
-        });
-        let res = await this.database.query("SELECT ROW_COUNT() as count;", values, (err, result) => {
-            if (err) throw err;
             return result;
         });
-        let count = res[0]["count"];
-        return count ?? 0;
+        return res["changedRows"] ?? 0;
     }
 
     public async deleteById(id: string): Promise<number> {
@@ -94,16 +90,12 @@ export default class TaskTable {
 
         let query = "DELETE FROM task WHERE id = ?";
         let values = [id];
-        await this.database.query(query, values, (err, result) => {
+        let res = await this.database.query(query, values, (err, result) => {
             if (err) throw err;
             console.log("1 record deleted");
-        });
-        let res = await this.database.query("SELECT ROW_COUNT() as count;", values, (err, result) => {
-            if (err) throw err;
             return result;
         });
-        let count = res[0]["count"];
-        return count ?? 0;
+        return res["affectedRows"] ?? 0;
     }
 
     public async deleteAll() {
