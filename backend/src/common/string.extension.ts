@@ -1,4 +1,4 @@
-export { };
+export {};
 
 declare global {
     interface StringConstructor {
@@ -8,14 +8,8 @@ declare global {
     }
 }
 
-String.isEmpty = function (str: string): boolean {
-    return str === "";
-}
+String.isEmpty = (str: string): boolean => str === '';
 
-String.isNull = function (str: string | null | undefined): boolean {
-    return str == null;
-}
+String.isNull = (str: string | null | undefined): boolean => str == null;
 
-String.isNullOrEmpty = function (str: string | null | undefined): boolean {
-    return this.isNull(str) || this.isEmpty(str as string);
-}
+String.isNullOrEmpty = (str: string | null | undefined): boolean => String.isNull(str) || String.isEmpty(str as string);

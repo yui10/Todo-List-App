@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as mysql from 'mysql';
 
 export default class MySQLAdapter {
@@ -14,7 +15,7 @@ export default class MySQLAdapter {
     public connect() {
         this.connection.connect((err) => {
             if (err) throw err;
-            console.log("Connected!");
+            console.log('Connected!');
         });
     }
 
@@ -25,21 +26,14 @@ export default class MySQLAdapter {
     public query(query: string | mysql.QueryOptions, callback?: mysql.queryCallback): Promise<any>;
     public query(query: string, values: any, callback?: mysql.queryCallback): Promise<any>;
 
-    public query(...args:
-        [string | mysql.QueryOptions, mysql.queryCallback?] |
-        [string, any, mysql.queryCallback?]
+    public query(
+        ...args: [string | mysql.QueryOptions, mysql.queryCallback?] | [string, any, mysql.queryCallback?]
     ): Promise<any> {
-        let query: string | mysql.QueryOptions = args[0];
-        let values: any = null;
-        let callback: mysql.queryCallback;
-        if (args.length == 2) {
-            if (typeof args[1] == 'function')
-                callback = args[1];
-            else
-                values = args[1];
-        } else if (args.length == 3) {
-            values = args[1];
-            callback = args[2] ?? (() => { });
+        // eslint-disable-next-line prefer-const
+        let [query, values, callback] = args;
+        if (typeof values === 'function') {
+            callback = values;
+            values = undefined;
         }
 
         return new Promise((resolve, reject) => {
@@ -47,6 +41,7 @@ export default class MySQLAdapter {
                 if (err) return reject(err);
                 if (callback) callback(err, result);
                 resolve(result);
+                return result;
             });
         });
     }

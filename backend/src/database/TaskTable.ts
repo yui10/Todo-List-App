@@ -1,13 +1,14 @@
 import * as mysql from 'mysql';
+import dayjs from 'dayjs';
 import Task from '../common/Task';
 import MySQLAdapter from './MySQLAdapter';
-import dayjs from 'dayjs';
 
 export default class TaskTable {
     private database: MySQLAdapter;
+
     constructor() {
-        let config: mysql.ConnectionConfig = {
-            host: "db",
+        const config: mysql.ConnectionConfig = {
+            host: 'db',
             port: 3306,
             user: process.env.MYSQL_USER,
             password: process.env.MYSQL_PASSWORD,
@@ -16,7 +17,7 @@ export default class TaskTable {
         };
         this.database = new MySQLAdapter(config);
         this.database.connect();
-        let query = `CREATE TABLE IF NOT EXISTS task (
+        const query = `CREATE TABLE IF NOT EXISTS task (
             id TEXT NOT NULL,
             created_at DATETIME(3) NOT NULL,
             content TEXT NOT NULL,
@@ -32,78 +33,84 @@ export default class TaskTable {
     }
 
     public async append(task: Task) {
-        if (task == null) throw new Error("task is null");
+        if (task == null) throw new Error('task is null');
 
-        let query = "INSERT INTO task (id, created_at, content, due_date, completed) VALUES (?,?,?,?,?)";
-        let due_date = task.getDueDate().isValid() ? task.getDueDate().format(Task.DATE_FORMAT) : null;
-        let values = [task.getId(), task.getCreatedAt().format(Task.DATE_FORMAT), task.getContent(), due_date, task.isCompleted()];
+        const query = 'INSERT INTO task (id, created_at, content, due_date, completed) VALUES (?,?,?,?,?)';
+        const values = [
+            task.getId(),
+            task.getCreatedAt().format(Task.DATE_FORMAT),
+            task.getContent(),
+            task.getDueDate().isValid() ? task.getDueDate().format(Task.DATE_FORMAT) : null,
+            task.isCompleted(),
+        ];
         await this.database.query(query, values, (err, result) => {
             if (err) throw err;
-            console.log("1 record inserted");
+            console.log('1 record inserted');
+            return result;
         });
     }
 
     public async findAll(): Promise<Task[]> {
-        let query = "SELECT * FROM task";
-        let tasks: Task[] = await this.find(query, []);
+        const query = 'SELECT * FROM task';
+        const tasks: Task[] = await this.find(query, []);
         return tasks;
     }
 
     public async findById(id: string): Promise<Task> {
-        if (String.isNull(id)) throw new Error("id is null");
+        if (String.isNull(id)) throw new Error('id is null');
 
-        let query = "SELECT * FROM task WHERE id = ?";
-        let values = [id];
-        let tasks = await this.find(query, values);
+        const query = 'SELECT * FROM task WHERE id = ?';
+        const values = [id];
+        const tasks = await this.find(query, values);
         if (tasks.length > 0) return tasks[0];
-        else return new Task("", dayjs(), "", dayjs(), false);
+
+        return new Task('', dayjs(), '', dayjs(), false);
     }
 
-    private async find(query: string, values: any[]): Promise<Task[]> {
-        let tasks: Task[] = [];
-        await this.database.query(query, values, (err, result) => {
-            if (err) throw err;
-            for (let row of result) {
-                let task = new Task(row.id, dayjs(row.created_at), row.content, dayjs(row.due_date), Boolean(row.completed));
-                tasks.push(task);
-            }
+    private async find(query: string, values: unknown[]): Promise<Task[]> {
+        const result = await this.database.query(query, values);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const tasks: Task[] = result.map((row: any) => {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            const { id, created_at, content, due_date, completed } = row;
+            return new Task(id, dayjs(created_at), content, dayjs(due_date), Boolean(completed));
         });
         return tasks;
     }
 
     public async update(task: Task): Promise<number> {
-        if (task == null) throw new Error("task is null");
+        if (task == null) throw new Error('task is null');
 
-        let query = "UPDATE task SET content = ?, due_date = ?, completed = ? WHERE id = ?";
-        let due_date = task.getDueDate().isValid() ? task.getDueDate().format(Task.DATE_FORMAT) : null;
-        let values = [task.getContent(), due_date, task.isCompleted(), task.getId()];
-        let res = await this.database.query(query, values, (err, result) => {
+        const query = 'UPDATE task SET content = ?, due_date = ?, completed = ? WHERE id = ?';
+        const dueDate = task.getDueDate().isValid() ? task.getDueDate().format(Task.DATE_FORMAT) : null;
+        const values = [task.getContent(), dueDate, task.isCompleted(), task.getId()];
+        const res = await this.database.query(query, values, (err, result) => {
             if (err) throw err;
-            console.log("1 record updated");
+            console.log('1 record updated');
             return result;
         });
-        return res["changedRows"] ?? 0;
+        return res.changedRows ?? 0;
     }
 
     public async deleteById(id: string): Promise<number> {
-        if (String.isNull(id)) throw new Error("id is null");
+        if (String.isNull(id)) throw new Error('id is null');
 
-        let query = "DELETE FROM task WHERE id = ?";
-        let values = [id];
-        let res = await this.database.query(query, values, (err, result) => {
+        const query = 'DELETE FROM task WHERE id = ?';
+        const values = [id];
+        const res = await this.database.query(query, values, (err, result) => {
             if (err) throw err;
-            console.log("1 record deleted");
+            console.log('1 record deleted');
             return result;
         });
-        return res["affectedRows"] ?? 0;
+        return res.affectedRows ?? 0;
     }
 
     public async deleteAll() {
-        let query = "DELETE FROM task";
+        const query = 'DELETE FROM task';
         await this.database.query(query, (err, result) => {
             if (err) throw err;
-            console.log("All records deleted");
+            console.log('All records deleted');
+            return result;
         });
     }
-
 }
