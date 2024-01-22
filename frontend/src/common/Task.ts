@@ -8,14 +8,20 @@ dayjs.tz.setDefault("Asia/Tokyo");
 
 export default class Task {
     public static readonly TimeFormat = 'YYYY-MM-DDTHH:mm';
+
     public static readonly TimeFormatSeconds = 'YYYY-MM-DDTHH:mm:ss';
+
     private id: string;
+
     private created_at: dayjs.Dayjs;
+
     private content: string;
+
     private due_date: string;
+
     private completed: boolean;
 
-    constructor(id: string, created_at: dayjs.Dayjs, content: string, due_date: string, completed: boolean = false) {
+    constructor(id: string, created_at: dayjs.Dayjs, content: string, due_date: string, completed = false) {
         this.id = id;
         this.created_at = created_at;
         this.content = content;
@@ -40,11 +46,10 @@ export default class Task {
     }
 
     public getDueDateDayjs(): dayjs.Dayjs | null {
-        let due_date = dayjs(this.due_date);
-        if (due_date.isValid())
-            return due_date;
-        else
-            return null;
+        const dueDate = dayjs(this.due_date);
+        if (dueDate.isValid())
+            return dueDate;
+        return null;
     }
 
     /**
