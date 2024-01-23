@@ -9,8 +9,6 @@
     "test": "jest --coverage --detectOpenHandles --forceExit"
   },
   "dependencies": {
-    "@types/mysql": "^2.15.24",
-    "@types/uuid": "^9.0.7",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "dayjs": "^1.11.10",
@@ -25,8 +23,10 @@
     "@types/debug": "^4.1.12",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.11",
+    "@types/mysql": "^2.15.25",
     "@types/node": "^20.9.3",
     "@types/supertest": "^6.0.0",
+    "@types/uuid": "^9.0.7",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",
     "eslint": "^8.56.0",
