@@ -1,21 +1,17 @@
-import request from "supertest";
-import { v4 as uuid } from "uuid";
-import dayjs from "dayjs";
+import request from 'supertest';
+import { v4 as uuid } from 'uuid';
+import dayjs from 'dayjs';
 
-import app from "../app";
-import Task from "../common/Task";
-import TaskTable from "../database/TaskTable";
+import app from '../app';
+import Task from '../common/Task';
+import TaskTable from '../database/TaskTable';
 
 const taskTable = new TaskTable();
 
 describe('Express API', () => {
     const ids: string[] = [uuid(), uuid(), uuid()];
     ids.sort();
-    const tasks: Task[] = [];
-    for (let id of ids) {
-        let task = new Task(id, dayjs(), "content", dayjs().add(1, "day"), false);
-        tasks.push(task);
-    }
+    const tasks: Task[] = ids.map((id) => new Task(id, dayjs(), 'content', dayjs().add(1, 'day'), false));
 
     beforeEach(async () => {
         await taskTable.deleteAll();
@@ -30,67 +26,89 @@ describe('Express API', () => {
         taskTable.close();
     });
 
+    test('GET /api/task', async () => {
+        await Promise.all(tasks.map((task) => taskTable.append(task)));
 
-    test("GET /api/task", async () => {
-        for (let task of tasks)
-            await taskTable.append(task);
-
-        const response = await request(app).get("/api/task").set('Accept', 'application/json');
+        const response = await request(app).get('/api/task').set('Accept', 'application/json');
 
         expect(response.status).toBe(200);
 
-        let res_object = JSON.parse(response.text);
-        let res_task: Task[] = [];
-        for (let i = 0; i < res_object.length; i++) {
-            res_task.push(new Task(res_object[i].id, dayjs(res_object[i].created_at), res_object[i].content, dayjs(res_object[i].due_date), res_object[i].completed));
+        const resObject = JSON.parse(response.text);
+        const resTask: Task[] = [];
+        for (let i = 0; i < resObject.length; i += 1) {
+            resTask.push(
+                new Task(
+                    resObject[i].id,
+                    dayjs(resObject[i].created_at),
+                    resObject[i].content,
+                    dayjs(resObject[i].due_date),
+                    resObject[i].completed
+                )
+            );
         }
 
-        expect(res_task).toEqual(tasks);
+        expect(resTask).toEqual(tasks);
     });
 
-    test("POST /api/task", async () => {
+    test('POST /api/task', async () => {
         let task = tasks[0];
-        const response = await request(app).post("/api/task").send(task).set("Accept", "application/json");
-        let id = JSON.parse(response.text).id, created_at = JSON.parse(response.text).created_at;
+        const response = await request(app).post('/api/task').send(task).set('Accept', 'application/json');
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const { id, created_at } = JSON.parse(response.text);
         task = new Task(id, dayjs(created_at), task.getContent(), task.getDueDate(), task.isCompleted());
 
         expect(response.status).toBe(201);
 
-        let res_object = JSON.parse(response.text);
-        let res_task = new Task(res_object.id, dayjs(res_object.created_at), res_object.content, dayjs(res_object.due_date), res_object.completed);
-        expect(res_task).toEqual(task);
+        const resObject = JSON.parse(response.text);
+        const resTask = new Task(
+            resObject.id,
+            dayjs(resObject.created_at),
+            resObject.content,
+            dayjs(resObject.due_date),
+            resObject.completed
+        );
+        expect(resTask).toEqual(task);
     });
 
-    test("PUT /api/task/:id", async () => {
+    test('PUT /api/task/:id', async () => {
         let task = tasks[0];
         await taskTable.append(task);
 
-        task = new Task(task.getId(), task.getCreatedAt(), "updated content", task.getDueDate(), task.isCompleted());
-        const response = await request(app).put(`/api/task/${task.getId()}`).send(task).set("Accept", "application/json");
+        task = new Task(task.getId(), task.getCreatedAt(), 'updated content', task.getDueDate(), task.isCompleted());
+        const response = await request(app)
+            .put(`/api/task/${task.getId()}`)
+            .send(task)
+            .set('Accept', 'application/json');
 
         expect(response.status).toBe(200);
 
-        let res_object = JSON.parse(response.text);
-        let res_task = new Task(res_object.id, dayjs(res_object.created_at), res_object.content, dayjs(res_object.due_date), res_object.completed);
-        expect(res_task).toEqual(task);
+        const resObject = JSON.parse(response.text);
+        const resTask = new Task(
+            resObject.id,
+            dayjs(resObject.created_at),
+            resObject.content,
+            dayjs(resObject.due_date),
+            resObject.completed
+        );
+        expect(resTask).toEqual(task);
     });
 
-    test("DELETE /api/task/:id", async () => {
-        let task = tasks[0];
+    test('DELETE /api/task/:id', async () => {
+        const task = tasks[0];
         await taskTable.append(task);
 
-        const response = await request(app).delete(`/api/task/${task.getId()}`).set("Accept", "application/json");
+        const response = await request(app).delete(`/api/task/${task.getId()}`).set('Accept', 'application/json');
         expect(response.status).toBe(200);
-        let res_object = JSON.parse(response.text);
-        expect(res_object.id).toEqual(task.getId());
-        let tasks_res = await taskTable.findAll();
-        expect(tasks_res.length).toBe(0);
+        const resObject = JSON.parse(response.text);
+        expect(resObject.id).toEqual(task.getId());
+        const tasksRes = await taskTable.findAll();
+        expect(tasksRes.length).toBe(0);
     });
 
-    test("DELETE /api/task/:id (not found)", async () => {
-        const response = await request(app).delete(`/api/task/${uuid()}`).set("Accept", "application/json");
+    test('DELETE /api/task/:id (not found)', async () => {
+        const response = await request(app).delete(`/api/task/${uuid()}`).set('Accept', 'application/json');
         expect(response.status).toBe(404);
-        let tasks_res = await taskTable.findAll();
-        expect(tasks_res.length).toBe(0);
+        const tasksRes = await taskTable.findAll();
+        expect(tasksRes.length).toBe(0);
     });
 });

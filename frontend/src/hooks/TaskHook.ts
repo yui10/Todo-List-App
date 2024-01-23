@@ -13,9 +13,10 @@ function useTaskHook() {
     }, []);
 
     const CreateTask = (task: Task) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         TaskApi.createTask(task).then((response: any) => {
-            let task = new Task(response.id, dayjs(response.created_at), response.content, response.due_date, response.completed);
-            setTaskList([...taskList, task]);
+            const responseTask = new Task(response.id, dayjs(response.created_at), response.content, response.due_date, response.completed);
+            setTaskList([...taskList, responseTask]);
         });
     };
 
@@ -27,24 +28,20 @@ function useTaskHook() {
         });
     }
 
-    const DeleteTask = async (task: Task[]) => {
-        let delete_api = [];
-        for (let i = 0; i < task.length; i++) {
-            delete_api.push(TaskApi.deleteTask(task[i]));
-        }
+    const DeleteTasks = async (task: Task[]) => {
+        const deleteAPI = task.map((_task) => TaskApi.deleteTask(_task));
 
-        let success_ids: string[] = [];
-        await Promise.all(delete_api).then((response) => {
-            console.log(response);
-            for (let i = 0; i < response.length; i++) {
-                if (response[i].id === undefined) continue;
-                success_ids.push(response[i].id);
+        const successIDs: string[] = [];
+        await Promise.all(deleteAPI).then((response) => {
+            for (let i = 0; i < response.length; i += 1) {
+                if (response[i].id !== undefined)
+                    successIDs.push(response[i].id);
             }
         });
-        setTaskList(taskList.filter((_task) => !success_ids.includes(_task.getId())));
+        setTaskList(taskList.filter((_task) => !successIDs.includes(_task.getId())));
     };
 
 
-    return { taskList, setTaskList, CreateTask, UpdateTask, DeleteTask };
+    return { taskList, setTaskList, CreateTask, UpdateTask, DeleteTasks };
 }
 export default useTaskHook;
