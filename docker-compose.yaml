@@ -33,7 +33,7 @@ services:
       - ./backend:/usr/src/app/backend
       - express-node_modules:/usr/src/app/backend/node_modules
     env_file:
-      - ./database/mysql/.env
+      - ./.env
     networks:
       - backend
     depends_on:
@@ -51,14 +51,8 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./database/mysql/my.cnf:/etc/mysql/conf.d/my.cnf # cnfファイル
-    # environment:
-    #   - MYSQL_ROOT_PASSWORD = ${ROOT_PASSWORD}
-    #   - MYSQL_DATABASE = ${DB_NAME}
-    #   - MYSQL_USER = ${DB_USER}
-    #   - MYSQL_PASSWORD = ${DB_PASSWORD}
-    #   - TZ = ${TZ}
     env_file:
-      - ./database/mysql/.env
+      - ./.env
     networks:
       - backend
   proxy:
