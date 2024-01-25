@@ -3,4 +3,4 @@ WORKDIR /usr/src/app/frontend
 
 COPY ./package*.json ./
 
-CMD ash -c "npm install --no-audit && npm run start"
+CMD ash -c "npm install && npm run start"

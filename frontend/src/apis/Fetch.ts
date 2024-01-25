@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3001';
+const baseUrl = window.location.origin;
 
 export default class Fetch {
     static async get(path: string) {
