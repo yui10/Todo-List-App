@@ -8,8 +8,8 @@ export default class TaskTable {
 
     constructor() {
         const config: mysql.ConnectionConfig = {
-            host: 'db',
-            port: 3306,
+            host: process.env.MYSQL_HOST,
+            port: process.env.MYSQL_PORT ? Number(process.env.MYSQL_PORT) : 3306,
             user: process.env.MYSQL_USER,
             password: process.env.MYSQL_PASSWORD,
             database: process.env.MYSQL_DATABASE,
